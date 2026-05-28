@@ -1,6 +1,7 @@
 # Historical & Celebrity Figures Debate League
 
 Une application web qui met en scène des débats structurés entre figures historiques et personnalités célèbres, générés par un LLM. L'utilisateur choisit deux personnages, propose un sujet, et regarde le débat se dérouler en temps réel — avec un juge qui note chaque débatteur et désigne un vainqueur.
+👉 **[Accéder à l'application](https://debate-jamil.streamlit.app/)**
 
 > **Avertissement.** Tous les propos sont générés par IA à des fins éducatives et satiriques. Ils ne représentent en aucun cas les opinions réelles des personnes représentées.
 
