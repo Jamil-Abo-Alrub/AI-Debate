@@ -1,6 +1,7 @@
 import json
 
 from core.debate import Debate
+from core.i18n import JUDGE_LANG_DIRECTIVES, DEFAULT_LANG
 from core.llm import chat
 
 JUDGE_SYSTEM = """You are a neutral debate judge. Score the debate that follows on four axes for EACH debater:
@@ -22,11 +23,13 @@ Output JSON only, no surrounding prose."""
 
 
 def judge(debate: Debate) -> dict:
+    lang_directive = JUDGE_LANG_DIRECTIVES.get(debate.language, JUDGE_LANG_DIRECTIVES[DEFAULT_LANG])
     user_msg = (
         f"TOPIC: {debate.topic}\n"
         f"DEBATER A: {debate.persona_a.name}\n"
         f"DEBATER B: {debate.persona_b.name}\n\n"
-        f"TRANSCRIPT:\n{debate.transcript_text()}"
+        f"TRANSCRIPT:\n{debate.transcript_text()}\n\n"
+        f"{lang_directive}"
     )
     raw = chat(
         messages=[

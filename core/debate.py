@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, Iterator, List, Optional
 
+from core.i18n import LANG_DIRECTIVES, DEFAULT_LANG
 from core.llm import stream_chat
 from core.persona import Persona
 
@@ -35,17 +36,6 @@ PHASE_INSTRUCTIONS: Dict[Phase, str] = {
 }
 
 
-PHASE_LABEL: Dict[Phase, str] = {
-    Phase.OPENING_A: "Opening",
-    Phase.OPENING_B: "Opening",
-    Phase.REBUTTAL_A: "Rebuttal",
-    Phase.REBUTTAL_B: "Rebuttal",
-    Phase.CLOSING_A: "Closing",
-    Phase.CLOSING_B: "Closing",
-    Phase.VERDICT: "Verdict",
-}
-
-
 @dataclass
 class Turn:
     phase: Phase
@@ -58,6 +48,7 @@ class Debate:
     persona_a: Persona
     persona_b: Persona
     topic: str
+    language: str = DEFAULT_LANG
     turns: List[Turn] = field(default_factory=list)
     current_phase_index: int = 0
 
@@ -91,11 +82,13 @@ class Debate:
 
         opponent = self.persona_b if speaker is self.persona_a else self.persona_a
         instruction = PHASE_INSTRUCTIONS[phase]
+        lang_directive = LANG_DIRECTIVES.get(self.language, LANG_DIRECTIVES[DEFAULT_LANG])
         user_msg = (
             f"DEBATE TOPIC: {self.topic}\n"
             f"YOUR OPPONENT: {opponent.name}\n\n"
             f"TRANSCRIPT SO FAR:\n{self.transcript_text()}\n\n"
-            f"YOUR TASK: {instruction}"
+            f"YOUR TASK: {instruction}\n\n"
+            f"OUTPUT LANGUAGE: {lang_directive}"
         )
 
         messages = [
