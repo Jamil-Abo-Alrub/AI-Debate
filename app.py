@@ -1,16 +1,13 @@
 import os
-from pathlib import Path
 
 import streamlit as st
 
-_SECRETS_PATHS = [
-    Path.home() / ".streamlit" / "secrets.toml",
-    Path(".streamlit") / "secrets.toml",
-]
-if any(p.exists() for p in _SECRETS_PATHS):
+try:
     for _key in ("DEEPSEEK_API_KEY",):
         if _key not in os.environ and _key in st.secrets:
             os.environ[_key] = st.secrets[_key]
+except Exception:
+    pass  # no secrets configured (e.g. local dev) — fall through to .env
 
 from core.debate import Debate, Phase
 from core.i18n import DEFAULT_LANG, LANG_LABELS, SUPPORTED_LANGS, get_lang, phase_label, t
